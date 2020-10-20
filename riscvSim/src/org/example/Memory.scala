@@ -1,7 +1,7 @@
 package org.example
 
-class Memory(val data: Array[Byte]) {
-    def this(size: Int) = this(new Array[Byte](size))
+class Memory(private val size: Int) {
+    val data = new Array[Byte](size)
 
     def writeByte(address: Int, value: Int): Unit = {
         data(address) = value.toByte
@@ -22,20 +22,8 @@ class Memory(val data: Array[Byte]) {
     def readByte(address: Int): Int = data(address)
     def readByteUnsigned(address: Int): Int = readByte(address) & 0xff
 
-    def readHalfword(address: Int): Int = {
-        val b0 = (data(address) & 0xff).toInt
-        val b1 = data(address + 1).toInt
+    def readHalfword(address: Int): Int = (readByte(address + 1) << 8) + readByteUnsigned(address)
+    def readHalfwordUnsigned(address: Int): Int = (readByteUnsigned(address + 1) << 8) + readByteUnsigned(address)
 
-        (b0 << 0) + (b1 << 8)
-    }
-    def readHalfwordUnsigned(address: Int): Int = readHalfword(address) & 0xffff
-
-    def readWord(address: Int): Int = {
-        val b0 = (data(address) & 0xff).toInt
-        val b1 = (data(address + 1) & 0xff).toInt
-        val b2 = (data(address + 2) & 0xff).toInt
-        val b3 = data(address + 3).toInt
-
-        (b0 << 0) + (b1 << 8) + (b2 << 16) + (b3 << 24)
-    }
+    def readWord(address: Int): Int = (readHalfword(address + 2) << 16) + readHalfwordUnsigned(address)
 }
