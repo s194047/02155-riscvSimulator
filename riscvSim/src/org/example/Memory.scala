@@ -1,7 +1,11 @@
 package org.example
 
 class Memory(private val size: Int) {
-    val data = new Array[Byte](size)
+    private val data = new Array[Byte](size)
+
+    def loadMemory(newData: Array[Byte], address: Int): Unit = {
+        newData.copyToArray(data, address)
+    }
 
     def writeByte(address: Int, value: Int): Unit = {
         data(address) = value.toByte
