@@ -9,7 +9,7 @@ class Memory(private val size: Int) {
 
     def writeHalfword(address: Int, value: Int): Unit = {
         data(address) = (value & 0xff).toByte
-        data(address + 1) = ((value >> 8) & 0xffff).toByte
+        data(address + 1) = ((value >> 8) & 0xff).toByte
     }
 
     def writeWord(address: Int, value: Int): Unit = {
