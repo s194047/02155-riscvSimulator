@@ -1,6 +1,6 @@
 package org.example
 
-class Memory(private val size: Int) {
+class Memory(val size: Int) {
     private val data = new Array[Byte](size)
 
     def loadMemory(newData: Array[Byte], address: Int): Unit = {
