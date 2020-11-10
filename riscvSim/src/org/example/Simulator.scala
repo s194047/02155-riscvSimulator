@@ -6,29 +6,48 @@ import scala.language.postfixOps
 object Simulator {
     def main(args: Array[String]): Unit = {
 
+        // Parse arguments
+        val filePath = if (args.length > 0) args(0) else ""
+        val memorySize = if (args.length > 1) {
+            args(1).toIntOption.getOrElse(4096)
+        } else 4096
+        val printRegistersOnExit = if (args.length > 2) {
+            args(2) == "true"
+        } else false
+
         // Read from file into Byte Array.
-        // val bis = new BufferedInputStream(new FileInputStream("riscvSim/resources/test1.bin"))
-        // val byteArray = Stream.continually(bis.read).takeWhile(-1 !=).map(_.toByte).toArray
+        val program = fileToByteArray(filePath)
 
-        // Choose first argument as memory size and 1024 as default.
-        val memorySize = if (args.length > 0) {
-            args(0).toIntOption.getOrElse(0)
-        } else 1024
-
+        // Initialise memory and load program into memory
         val memory = new Memory(memorySize)
+        memory.loadMemory(program, 0)
 
-        // Test reads and writes
-        memory.writeByte(0, 0xef)
-        memory.writeByte(1, 0xbe)
-        memory.writeByte(2, 0xad)
-        memory.writeByte(3, 0xde)
-        memory.writeHalfword(4, 0xdead)
-        memory.writeWord(8, 0xdeadbeef)
+        // Initialise registers
+        val registers = new RegisterFile(32, 1)
 
-        println(memory.readByte(0).toHexString)
-        println(memory.readByteUnsigned(0).toHexString)
-        println(memory.readHalfword(0).toHexString)
-        println(memory.readHalfwordUnsigned(4).toHexString)
-        println(memory.readWord(0).toHexString)
+        // Main processor loop
+        var programCounter = 0
+        while (programCounter <= memory.size - 4) {
+            // Fetch instruction from memory
+            val instruction = Instruction.readInstructionType(memory, programCounter)
+            instruction.execute(registers)
+
+            // debug
+            println(instruction.toString())
+
+            println(f"${memory.readWord(programCounter)}%8h")
+
+            programCounter += 4
+        }
+    }
+
+    def fileToByteArray(filePath: String): Array[Byte] = {
+        if (filePath == "") {
+            new Array[Byte](0)
+        }
+        else {
+            val bis = new BufferedInputStream(new FileInputStream(filePath))
+            Stream.continually(bis.read).takeWhile(-1 !=).map(_.toByte).toArray
+        }
     }
 }
