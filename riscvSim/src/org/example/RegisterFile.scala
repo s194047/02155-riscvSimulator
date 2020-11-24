@@ -1,18 +1,42 @@
 package org.example
 
-class RegisterFile(private val size: Int, private val offset: Int = 1) {
+import java.io._
+
+class RegisterFile(private val size: Int, private val offset: Int = 1, private val verbose: Boolean = true) {
     private val data = new Array[Int](size - offset)
 
     def apply(register: Int): Int = if (register > 0) data(register - offset) else 0
     def update(register: Int, value: Int): Unit = {
-        data(register - offset) = value
-    }
-
-    def printRegisters(): Unit = {
-        for (i <- 0 until size - offset) {
-            println(f"x${i + offset}%02d: ${data(i)}")
+        if (register - offset >= 0) {
+            data(register - offset) = value
         }
     }
 
+    def printRegisters(inline: Boolean = false): Unit = {
+        if (verbose) {
+            if (inline) {
+                println("Register contents:")
+                for (i <- 0 until size - offset) {
+                    print(f"x${i + offset}%02d: ${data(i)}" + (if (i == size - offset - 1) "" else " "))
+                }
+            } else {
+                println("Register contents:")
+                for (i <- 0 until size - offset) {
+                    println(f"x${i + offset}%02d: ${data(i)}")
+                }
+            }
+        }
+    }
 
+    def writeRegisterDump(outputFilePath: String): Unit = {
+        val outputFile = new FileOutputStream(outputFilePath)
+
+        for (i <- 0 until (size)) {
+            outputFile.write(intToByteArray(this(i)))
+        }
+
+        def intToByteArray(value: Int): Array[Byte] = {
+            Array[Byte](value.toByte, (value << 8).toByte, (value << 16).toByte, (value << 24).toByte)
+        }
+    }
 }

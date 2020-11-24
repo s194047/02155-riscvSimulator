@@ -30,4 +30,9 @@ class Memory(val size: Int) {
     def readHalfwordUnsigned(address: Int): Int = (readByteUnsigned(address + 1) << 8) + readByteUnsigned(address)
 
     def readWord(address: Int): Int = (readHalfword(address + 2) << 16) + readHalfwordUnsigned(address)
+
+    def readString(address: Int): String = {
+        val messageArray = data.splitAt(address - 1)._2.takeWhile(_ != 0x00)
+        messageArray.map(_.toChar).mkString
+    }
 }

@@ -9,8 +9,8 @@ object Simulator {
         // Parse arguments
         val filePath = if (args.length > 0) args(0) else ""
         val memorySize = if (args.length > 1) {
-            args(1).toIntOption.getOrElse(4096)
-        } else 4096
+            args(1).toIntOption.getOrElse(4194304) // 4 MiB
+        } else 4194304
         val printRegistersOnExit = if (args.length > 2) {
             args(2) == "true"
         } else false
@@ -23,21 +23,22 @@ object Simulator {
         memory.loadMemory(program, 0)
 
         // Initialise registers
-        val registers = new RegisterFile(32, 1)
+        val registers = new RegisterFile(size = 32, offset = 1, verbose = printRegistersOnExit)
 
         // Main processor loop
-        var programCounter = 0
-        while (programCounter <= memory.size - 4) {
+        val programCounter = new ProgramCounter(0)
+        while (programCounter() <= memory.size - 4) {
             // Fetch instruction from memory
-            val instruction = Instruction.readInstructionType(memory, programCounter)
-            instruction.execute(registers)
+            val instruction = Instruction.readInstructionType(memory, programCounter())
 
             // debug
-            println(instruction.toString())
+            println(f"${programCounter()}%04d" + ": " + instruction.toString)
+            //println(f"${memory.readWord(programCounter())}%8h")
+            println(registers.printRegisters(inline = true))
+            println(memory.readWord(programCounter()).toHexString)
+            println()
 
-            println(f"${memory.readWord(programCounter)}%8h")
-
-            programCounter += 4
+            instruction.execute(registers, memory, programCounter)
         }
     }
 
