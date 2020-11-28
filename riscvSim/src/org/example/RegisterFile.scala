@@ -30,6 +30,8 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
 
     def writeRegisterDump: Unit = {
         for (dumpOutputFilePath <- dumpOutputFilePathOpt) {
+            println(s"Dumping registers to '$dumpOutputFilePath'.")
+
             val outputFile = new FileOutputStream(dumpOutputFilePath)
 
             for (i <- 0 until (size)) {

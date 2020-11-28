@@ -235,6 +235,8 @@ class EnvInstruction extends Instruction {
 
         programCounter += 4
     }
+
+    override def toString(): String = s"Environment call"
 }
 
 class InvalidInstruction extends Instruction {
