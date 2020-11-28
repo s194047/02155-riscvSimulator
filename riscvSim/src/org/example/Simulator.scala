@@ -14,6 +14,8 @@ object Simulator {
         memorySize: Int = 4194304,
         @arg(name = "print-registers", short = 'p', doc = "Print registers on exit")
         printRegistersOnExit: Flag,
+        @arg(name = "instruction-trace", short = 't', doc = "Print instruction and register trace during execution")
+        trace: Flag,
         @arg(name = "dump-registers-file", short = 'd', doc = "Dump registers to file on exit")
         dumpRegistersFilePathOpt: Option[String] = None
     ): Unit = {
@@ -35,10 +37,12 @@ object Simulator {
             val instruction = Instruction.readInstructionType(memory, programCounter())
 
             // debug
-            println(f"${programCounter()}%04d" + ": " + instruction.toString)
-            println(f"${memory.readWord(programCounter())}%08x")
-            registers.printRegisters(inline = true)
-            println
+            if (trace.value) {
+                println(f"${programCounter()}%04d" + ": " + instruction.toString)
+                println(f"${memory.readWord(programCounter())}%08x")
+                registers.printRegisters(inline = true)
+                println
+            }
 
             instruction.execute(registers, memory, programCounter)
         }
