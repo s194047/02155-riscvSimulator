@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "addpos, 4096, true",
+            "mainClass": "org.example.Simulator",
+            "args": ["riscvSim/resources/tests/task1/addpos.bin", "4096", "true"],
+            "jvmOptions": []
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "addpos, 4096, false",
+            "mainClass": "org.example.Simulator",
+            "args": ["riscvSim/resources/tests/task1/addpos.bin", "4096", "false"],
+            "jvmOptions": []
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "addpos, 4096",
+            "mainClass": "org.example.Simulator",
+            "args": ["riscvSim/resources/tests/task1/addpos.bin", "4096"],
+            "jvmOptions": []
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "test",
+            "mainClass": "org.example.Simulator",
+            "args": ["riscvSim/resources/tests/venus-loop.bin", "default", "true"],
+            "jvmOptions": []
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "No args",
+            "mainClass": "org.example.Simulator",
+            "args": [],
+            "jvmOptions": []
+        },
+        {
+            "type": "scala",
+            "request": "launch",
+            "name": "mainargs",
+            "mainClass": "org.example.Simulator",
+            "args": ["-f", "tests/task1/addlarge.bin", "-d", "a.out", "-p", "-t"],
+            "jvmOptions": []
+        },
+    ],
+}

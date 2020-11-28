@@ -1,5 +1,4 @@
-.bloop
-.metals
-.vscode
-out
-out.bin
+/.bloop
+/.metals
+/out
+/testout
