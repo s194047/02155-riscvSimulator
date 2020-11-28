@@ -3,27 +3,30 @@ package org.example
 import java.io._
 import scala.language.postfixOps
 
+import mainargs.{main, arg, ParserForMethods, Flag}
+
 object Simulator {
-    def main(args: Array[String]): Unit = {
-
-        // Parse arguments
-        val filePath = if (args.length > 0) args(0) else ""
-        val memorySize = if (args.length > 1) {
-            args(1).toIntOption.getOrElse(4194304) // 4 MiB
-        } else 4194304
-        val printRegistersOnExit = if (args.length > 2) {
-            args(2) == "true"
-        } else false
-
+    @main
+    def run(
+        @arg(name = "program-path", short = 'f', doc = "Path to RISC-V program to be executed")
+        programPath: String,
+        @arg(name = "memory-size", short = 'm', doc = "Size of memory (default is 4 MiB)")
+        memorySize: Int = 4194304,
+        @arg(name = "print-registers", short = 'p', doc = "Print registers on exit")
+        printRegistersOnExit: Flag,
+        @arg(name = "dump-registers-file", short = 'd', doc = "Dump registers to file on exit")
+        dumpRegistersFilePathOpt: Option[String] = None
+    ): Unit = {
         // Read from file into Byte Array.
-        val program = fileToByteArray(filePath)
+        val program = fileToByteArray(programPath)
 
         // Initialise memory and load program into memory
         val memory = new Memory(memorySize)
         memory.loadMemory(program, 0)
 
         // Initialise registers
-        val registers = new RegisterFile(size = 32, offset = 1, verbose = printRegistersOnExit)
+        val registers = new RegisterFile(size = 32, offset = 1, verbose = printRegistersOnExit.value,
+                dumpOutputFilePathOpt = dumpRegistersFilePathOpt)
 
         // Main processor loop
         val programCounter = new ProgramCounter(0)
@@ -41,6 +44,8 @@ object Simulator {
             instruction.execute(registers, memory, programCounter)
         }
     }
+
+    def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args)
 
     def fileToByteArray(filePath: String): Array[Byte] = {
         if (filePath == "") {

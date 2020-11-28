@@ -2,7 +2,7 @@ package org.example
 
 import java.io._
 
-class RegisterFile(private val size: Int, private val offset: Int = 1, private val verbose: Boolean = true) {
+class RegisterFile(private val size: Int, private val offset: Int = 1, private val verbose: Boolean = true, private val dumpOutputFilePathOpt: Option[String]) {
     private val data = new Array[Int](size - offset)
 
     def apply(register: Int): Int = if (register > 0) data(register - offset) else 0
@@ -28,15 +28,17 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
         }
     }
 
-    def writeRegisterDump(outputFilePath: String): Unit = {
-        val outputFile = new FileOutputStream(outputFilePath)
+    def writeRegisterDump: Unit = {
+        for (dumpOutputFilePath <- dumpOutputFilePathOpt) {
+            val outputFile = new FileOutputStream(dumpOutputFilePath)
 
-        for (i <- 0 until (size)) {
-            outputFile.write(intToByteArray(this(i)))
-        }
+            for (i <- 0 until (size)) {
+                outputFile.write(intToByteArray(this(i)))
+            }
 
-        def intToByteArray(value: Int): Array[Byte] = {
-            Array[Byte](value.toByte, (value << 8).toByte, (value << 16).toByte, (value << 24).toByte)
+            def intToByteArray(value: Int): Array[Byte] = {
+                Array[Byte](value.toByte, (value << 8).toByte, (value << 16).toByte, (value << 24).toByte)
+            }
         }
     }
 }

@@ -226,7 +226,7 @@ class EnvInstruction extends Instruction {
             case 10 | 17 => {
                 val status = if (registers(10) == 10) 0 else registers(11)
                 registers.printRegisters()
-                registers.writeRegisterDump("out.bin")
+                registers.writeRegisterDump
                 System.exit(status)
             }
             case 11 => print(registers(11).toChar) // Print contents of a1 as an char
