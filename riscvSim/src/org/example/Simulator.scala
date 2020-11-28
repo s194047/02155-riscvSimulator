@@ -36,10 +36,9 @@ object Simulator {
 
             // debug
             println(f"${programCounter()}%04d" + ": " + instruction.toString)
-            //println(f"${memory.readWord(programCounter())}%8h")
-            println(registers.printRegisters(inline = true))
-            println(memory.readWord(programCounter()).toHexString)
-            println()
+            println(f"${memory.readWord(programCounter())}%08x")
+            registers.printRegisters(inline = true)
+            println
 
             instruction.execute(registers, memory, programCounter)
         }

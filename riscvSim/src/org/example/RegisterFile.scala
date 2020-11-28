@@ -14,13 +14,13 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
 
     def printRegisters(inline: Boolean = false): Unit = {
         if (verbose) {
+            println("Register contents:")
             if (inline) {
-                println("Register contents:")
                 for (i <- 0 until size - offset) {
                     print(f"x${i + offset}%02d: ${data(i)}" + (if (i == size - offset - 1) "" else " "))
                 }
+                println
             } else {
-                println("Register contents:")
                 for (i <- 0 until size - offset) {
                     println(f"x${i + offset}%02d: ${data(i)}")
                 }
