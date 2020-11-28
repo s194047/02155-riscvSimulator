@@ -22,7 +22,7 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
                 println
             } else {
                 for (i <- 0 until size - offset) {
-                    println(f"x${i + offset}%02d: ${data(i)}")
+                    println(f"x${i + offset}%02d: ${data(i)}%10d 0x${data(i)}%08x")
                 }
             }
         }
@@ -39,7 +39,7 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
             }
 
             def intToByteArray(value: Int): Array[Byte] = {
-                Array[Byte](value.toByte, (value << 8).toByte, (value << 16).toByte, (value << 24).toByte)
+                Array[Byte](value.toByte, (value >> 8).toByte, (value >> 16).toByte, (value >> 24).toByte)
             }
         }
     }
