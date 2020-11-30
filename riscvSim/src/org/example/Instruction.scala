@@ -101,6 +101,8 @@ class ITypeInstruction(private val immediate: Int,
             case (0x0, 0x03) => memory.readByte(immediate + registers(rs1)) // lb
             case (0x1, 0x03) => memory.readHalfword(immediate + registers(rs1)) // lh
             case (0x2, 0x03) => memory.readWord(immediate + registers(rs1)) // lw
+            case (0x4, 0x03) => memory.readByteUnsigned(immediate + registers(rs1)) // lbu
+            case (0x5, 0x03) => memory.readHalfwordUnsigned(immediate + registers(rs1)) // lhu
 
             case (0x0, 0x13) => registers(rs1) + immediate // addi
             case (0x2, 0x13) => if (registers(rs1) < immediate) 1 else 0 // slti
