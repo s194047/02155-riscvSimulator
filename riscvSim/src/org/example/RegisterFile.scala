@@ -22,7 +22,7 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
                 println
             } else {
                 for (i <- 0 until size - offset) {
-                    println(f"x${i + offset}%02d: ${data(i)}%10d 0x${data(i)}%08x")
+                    println(f"x${i + offset}%02d: ${data(i)}%11d 0x${data(i)}%08x")
                 }
             }
         }

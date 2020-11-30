@@ -36,10 +36,11 @@ object Simulator {
             // Fetch instruction from memory
             val instruction = Instruction.readInstructionType(memory, programCounter())
 
-            // debug
+            // Print trace
             if (trace.value) {
-                println(f"${programCounter()}%04d" + ": " + instruction.toString)
-                println(f"${memory.readWord(programCounter())}%08x")
+                println(f"${programCounter()}%04d" + ":")
+                println(instruction.toString)
+                println(f"0x${memory.readWord(programCounter())}%08x")
                 registers.printRegisters(inline = true)
                 println
             }
