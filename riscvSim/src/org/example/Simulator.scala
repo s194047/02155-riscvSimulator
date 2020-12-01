@@ -1,7 +1,6 @@
 package org.example
 
 import java.io._
-import scala.language.postfixOps
 
 import mainargs.{main, arg, ParserForMethods, Flag}
 
@@ -57,7 +56,7 @@ object Simulator {
         }
         else {
             val bis = new BufferedInputStream(new FileInputStream(filePath))
-            Stream.continually(bis.read).takeWhile(-1 !=).map(_.toByte).toArray
+            LazyList.continually(bis.read).takeWhile(_ != -1).map(_.toByte).toArray
         }
     }
 }
