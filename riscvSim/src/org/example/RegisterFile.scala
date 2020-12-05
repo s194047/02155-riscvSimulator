@@ -16,13 +16,13 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
         if (verbose) {
             println("Register contents:")
             if (inline) {
-                for (i <- 0 until size - offset) {
-                    print(f"x${i + offset}%02d: ${data(i)}" + (if (i == size - offset - 1) "" else " "))
+                for (i <- 0 until size) {
+                    print(f"x${i}%02d: ${this(i)}" + (if (i == size - 1) "" else " "))
                 }
                 println
             } else {
-                for (i <- 0 until size - offset) {
-                    println(f"x${i + offset}%02d: ${data(i)}%11d 0x${data(i)}%08x")
+                for (i <- 0 until size) {
+                    println(f"x${i}%02d: ${this(i)}%11d 0x${this(i)}%08x")
                 }
             }
         }
