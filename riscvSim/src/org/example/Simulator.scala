@@ -44,6 +44,7 @@ object Simulator {
                 println
             }
 
+            // Execute instruction
             instruction.execute(registers, memory, programCounter)
         }
     }

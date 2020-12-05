@@ -131,7 +131,7 @@ class ITypeInstruction(private val immediate: Int,
 
                 returnAddress
             }
-            case _   => throw new InvalidInstructionExecption("Unrecognised I-type instruction")
+            case _           => throw new InvalidInstructionExecption("Unrecognised I-type instruction")
         }
 
         if ((funct3, opcode) != (0x0, 0x67)) {
