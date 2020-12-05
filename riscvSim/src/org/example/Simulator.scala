@@ -47,6 +47,8 @@ object Simulator {
             // Execute instruction
             instruction.execute(registers, memory, programCounter)
         }
+
+        throw new RuntimeException("Program counter exceeded memory size.")
     }
 
     def main(args: Array[String]): Unit = ParserForMethods(this).runOrExit(args)
