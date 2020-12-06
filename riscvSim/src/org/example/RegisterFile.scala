@@ -2,7 +2,7 @@ package org.example
 
 import java.io._
 
-class RegisterFile(private val size: Int, private val offset: Int = 1, private val verbose: Boolean = true, private val dumpOutputFilePathOpt: Option[String]) {
+class RegisterFile(private val size: Int, private val offset: Int = 0, private val verbose: Boolean = true, private val dumpOutputFilePathOpt: Option[String]) {
     private val data = new Array[Int](size - offset)
 
     def apply(register: Int): Int = if (register > 0) data(register - offset) else 0
@@ -13,17 +13,16 @@ class RegisterFile(private val size: Int, private val offset: Int = 1, private v
     }
 
     def printRegisters(inline: Boolean = false): Unit = {
-        if (verbose) {
+        if (inline) {
             println("Register contents:")
-            if (inline) {
-                for (i <- 0 until size) {
-                    print(f"x${i}%02d: ${this(i)}" + (if (i == size - 1) "" else " "))
-                }
-                println
-            } else {
-                for (i <- 0 until size) {
-                    println(f"x${i}%02d: ${this(i)}%11d 0x${this(i)}%08x")
-                }
+            for (i <- 0 until size) {
+                print(f"x${i}%02d: ${this(i)}" + (if (i == size - 1) "" else " "))
+            }
+            println
+        } else if (verbose) {
+            println("Register contents:")
+            for (i <- 0 until size) {
+                println(f"x${i}%02d: ${this(i)}%11d 0x${this(i)}%08x")
             }
         }
     }
