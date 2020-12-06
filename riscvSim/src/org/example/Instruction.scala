@@ -221,24 +221,26 @@ class UJTypeInstruction(private val immediate: Int,
 class EnvInstruction extends Instruction {
 
     override def execute(registers: RegisterFile, memory: Memory, programCounter: ProgramCounter): Unit = {
+        // ecall (based on the environmental calls in the Venus simulator)
         registers(10) match {
-            case 1 => print(registers(11)) // Print contents of a1 as an int
-            case 4 => print(memory.readString(registers(11))) // Print string starting at address in a1
-            case 9 => ??? // FIXME: Implement this call?
+            case 1       => print(registers(11)) // Print contents of a1 as an int
+            case 4       => print(memory.readString(registers(11))) // Print string starting at address in a1
+            case 9       => ??? // FIXME: Implement this call? (Allocate a1 bytes on the heap, return pointer to start in a0)
             case 10 | 17 => {
+                // Exit the program (status 0 if a0 == 10 and status a1 if a0 == 17)
                 val status = if (registers(10) == 10) 0 else registers(11)
                 registers.printRegisters()
                 registers.writeRegisterDump
                 System.exit(status)
             }
-            case 11 => print(registers(11).toChar) // Print contents of a1 as an char
-            case _  => throw new InvalidInstructionExecption("Unrecognised ID for ecall")
+            case 11       => print(registers(11).toChar) // Print contents of a1 as an ASCII character
+            case _        => throw new InvalidInstructionExecption("Unrecognised ID for ecall")
         }
 
         programCounter += 4
     }
 
-    override def toString(): String = s"Environment call"
+    override def toString(): String = "Environment call"
 }
 
 class InvalidInstruction extends Instruction {
@@ -246,6 +248,8 @@ class InvalidInstruction extends Instruction {
     override def execute(registers: RegisterFile, memory: Memory, programCounter: ProgramCounter): Unit = {
         throw new InvalidInstructionExecption("Unrecognised instruction type")
     }
+
+    override def toString(): String = "Invalid instruction"
 }
 
 class InvalidInstructionExecption(message: String) extends Exception(message) {

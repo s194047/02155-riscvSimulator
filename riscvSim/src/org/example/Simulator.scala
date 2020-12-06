@@ -32,7 +32,7 @@ object Simulator {
         // Main processor loop
         val programCounter = new ProgramCounter(0)
         while (programCounter() <= memory.size - 4) {
-            // Fetch instruction from memory
+            // Fetch and decode instruction from memory
             val instruction = Instruction.readInstructionType(memory, programCounter())
 
             // Print trace
